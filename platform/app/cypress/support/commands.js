@@ -252,7 +252,7 @@ Cypress.Commands.add(
   (firstClick = [150, 100], secondClick = [130, 170]) => {
     // Assign an alias to the button element
     cy.get('@measurementToolsBtnPrimary').as('lengthButton');
-
+    console.log('inside cypress');
     cy.get('@lengthButton').should('have.attr', 'data-tool', 'Length');
 
     cy.get('@lengthButton').then(button => {
@@ -334,7 +334,7 @@ Cypress.Commands.add(
   (initPos = [180, 390], midPos = [300, 410], finalPos = [180, 450]) => {
     cy.get('[data-cy="MeasurementTools-split-button-secondary"]').click();
     cy.get('[data-cy="Angle"]').click();
-
+    console.log('inside cypress');
     cy.addAngle('.cornerstone-canvas', initPos, midPos, finalPos);
   }
 );

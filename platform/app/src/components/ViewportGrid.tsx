@@ -8,6 +8,7 @@ import classNames from 'classnames';
 import { useAppConfig } from '@state';
 
 function ViewerViewportGrid(props: withAppTypes) {
+  console.log('im called viewerViewportGrid tahi');
   const { servicesManager, viewportComponents, dataSource } = props;
   const [viewportGrid, viewportGridService] = useViewportGrid();
   const [appConfig] = useAppConfig();
@@ -102,6 +103,7 @@ function ViewerViewportGrid(props: withAppTypes) {
 
   const _getUpdatedViewports = useCallback(
     (viewportId, displaySetInstanceUID) => {
+      console.log('didalam berak');
       let updatedViewports = [];
       try {
         updatedViewports = hangingProtocolService.getViewportsRequireUpdate(
@@ -160,7 +162,7 @@ function ViewerViewportGrid(props: withAppTypes) {
         // so we need to change layouts into a layout which can consume
         // the event.
         const { displaySetInstanceUID: referencedDisplaySetInstanceUID } = measurement;
-
+        console.log('didalam berak');
         const updatedViewports = _getUpdatedViewports(viewportId, referencedDisplaySetInstanceUID);
         // Arbitrarily assign the viewport to element 0
         const viewport = updatedViewports?.[0];
@@ -178,6 +180,7 @@ function ViewerViewportGrid(props: withAppTypes) {
 
         const displaySet = displaySetService.getDisplaySetByUID(referencedDisplaySetInstanceUID);
         // jump straight to the initial image index if we can
+        console.log('didalam berak');
         if (displaySet.images && measurement.SOPInstanceUID) {
           for (let index = 0; index < displaySet.images.length; index++) {
             const image = displaySet.images[index];
@@ -244,6 +247,7 @@ function ViewerViewportGrid(props: withAppTypes) {
 
   const onDropHandler = (viewportId, { displaySetInstanceUID }) => {
     const updatedViewports = _getUpdatedViewports(viewportId, displaySetInstanceUID);
+    console.log('didalam berak');
     viewportGridService.setDisplaySetsForViewports(updatedViewports);
   };
 
@@ -326,6 +330,7 @@ function ViewerViewportGrid(props: withAppTypes) {
           }}
           isActive={isActive}
         >
+          
           <div
             data-cy="viewport-pane"
             className={classNames('flex h-full w-full flex-col', {
@@ -333,6 +338,7 @@ function ViewerViewportGrid(props: withAppTypes) {
                 !isActive && (appConfig?.activateViewportBeforeInteraction ?? true),
             })}
           >
+            <p> petamma sayang</p>
             <ViewportComponent
               displaySets={displaySets}
               viewportLabel={viewports.size > 1 ? viewportLabel : ''}
@@ -400,6 +406,7 @@ function _getViewportComponent(displaySets, viewportComponents, uiNotificationSe
 
   // Todo: Do we have a viewport that has two different SOPClassHandlerIds?
   const SOPClassHandlerId = displaySets[0].SOPClassHandlerId;
+  console.log('sop class', displaySets[0].SOPClassHandlerId);
 
   for (let i = 0; i < viewportComponents.length; i++) {
     if (!viewportComponents[i]) {

@@ -108,6 +108,8 @@ const createRoutes = ({
     props: { children: WorkList, servicesManager, extensionManager },
   };
 
+  console.log('show study list state', showStudyList);
+
   const customRoutes = customizationService.getGlobalCustomization('customRoutes');
   const allRoutes = [
     ...routes,
@@ -116,6 +118,8 @@ const createRoutes = ({
     ...bakedInRoutes,
     customRoutes?.notFoundRoute || notFoundRoute,
   ];
+
+  console.log('all routes: ', allRoutes);
 
   function RouteWithErrorBoundary({ route, ...rest }) {
     // eslint-disable-next-line react/jsx-props-no-spreading
@@ -143,6 +147,7 @@ const createRoutes = ({
   return (
     <Routes>
       {allRoutes.map((route, i) => {
+        console.log('inside router: ' + route.private);
         return route.private === true ? (
           <Route
             key={i}

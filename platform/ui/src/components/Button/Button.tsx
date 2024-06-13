@@ -93,6 +93,8 @@ const Button = ({
   const handleOnClick = e => {
     buttonElement.current.blur();
     if (!disabled) {
+      console.log('ditekan');
+      console.log('ditekan: ', e);
       onClick(e);
     }
   };

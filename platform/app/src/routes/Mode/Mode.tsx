@@ -82,6 +82,7 @@ export default function ModeRoute({
   }
 
   const dataSource = extensionManager.getActiveDataSource()[0];
+  console.log('active datasource: ', dataSource);
 
   // Only handling one route per mode for now
   const route = mode.routes[0];
@@ -331,6 +332,7 @@ export default function ModeRoute({
   }
 
   const ViewportGridWithDataSource = props => {
+    console.log('props before prop: ', props);
     return ViewportGrid({ ...props, dataSource });
   };
 
@@ -354,6 +356,7 @@ export default function ModeRoute({
     ViewportGridComp: ViewportGridWithDataSource,
   });
 
+  console.log('context provider: ', CombinedExtensionsContextProvider);
   return (
     <ImageViewerProvider StudyInstanceUIDs={studyInstanceUIDs}>
       {CombinedExtensionsContextProvider ? (

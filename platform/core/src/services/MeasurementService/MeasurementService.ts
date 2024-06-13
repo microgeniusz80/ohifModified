@@ -165,6 +165,7 @@ class MeasurementService extends PubSubService {
    * @return {Measurement[]} Array of measurements
    */
   getMeasurements() {
+    console.log('returning measurements');
     return [...this.measurements.values()];
   }
 
@@ -175,6 +176,7 @@ class MeasurementService extends PubSubService {
    * @return {Measurement} Measurement instance
    */
   public getMeasurement(measurementUID: string) {
+    console.log('MeasurementService:', measurementUID);
     return this.measurements.get(measurementUID);
   }
 
@@ -538,6 +540,7 @@ class MeasurementService extends PubSubService {
         });
       } else {
         log.info('Measurement added.', newMeasurement);
+        console.log(newMeasurement.displayText);
         this._broadcastEvent(this.EVENTS.MEASUREMENT_ADDED, {
           source,
           measurement: newMeasurement,

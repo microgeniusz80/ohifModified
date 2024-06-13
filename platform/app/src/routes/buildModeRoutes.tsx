@@ -33,16 +33,21 @@ export default function buildModeRoutes({
   const dataSourceNames = [];
 
   dataSources.forEach(dataSource => {
+    //console.log('the data source: ', dataSource);
     const { sourceName } = dataSource;
     if (!dataSourceNames.includes(sourceName)) {
       dataSourceNames.push(sourceName);
     }
   });
 
+  //console.log('data source name: ', dataSourceNames);
+  //console.log('modes in buildmoderoutes: ', modes);
+
   modes.forEach(mode => {
     // todo: for each route. add route to path.
     dataSourceNames.forEach(dataSourceName => {
       const path = `/${mode.routeName}/${dataSourceName}`;
+      console.log('the jalan: ', path);
 
       // TODO move up.
       const children = () => (
@@ -62,6 +67,8 @@ export default function buildModeRoutes({
         private: true,
       });
     });
+
+    
 
     // Add active DataSource route.
     // This is the DataSource route for the active data source defined in ExtensionManager.getActiveDataSource
@@ -83,6 +90,8 @@ export default function buildModeRoutes({
       children,
       private: true, // todo: all mode routes are private for now
     });
+
+    //console.log('routes: ', routes);
   });
 
   return routes;

@@ -119,6 +119,7 @@ function App({ config, defaultExtensions, defaultModes }) {
     routerBasename,
     showStudyList,
   });
+  console.log('oidc state: ', oidc);
 
   if (oidc) {
     authRoutes = (

@@ -23,7 +23,7 @@ const getLoadButton = (onDrop, text, isDir) => {
             variant="contained" // outlined
             disabled={false}
             endIcon={<Icon name="launch-arrow" />} // launch-arrow | launch-info
-            className={classnames('font-medium', 'ml-2')}
+            className={classnames('font-large', 'ml-2')}
             onClick={() => {}}
           >
             {text}
@@ -48,12 +48,16 @@ type LocalProps = {
 };
 
 function Local({ modePath }: LocalProps) {
+  const dicomUrl = "https://dl.dropboxusercontent.com/scl/fi/du34941obm3ke4n9s98pw/0020.DCM?rlkey=v3dkk4292gasuqjus16hyeqc3&dl=0";
+  const anotherdicom = "https://dl.dropboxusercontent.com/scl/fi/80yhri7y5rpmzat3h28gw/MRBRAIN.DCM?rlkey=qs0l43h2folbmdnj5pyr8yx0v&st=5rd2m3o3&dl=0";
   const navigate = useNavigate();
   const dropzoneRef = useRef();
   const [dropInitiated, setDropInitiated] = React.useState(false);
 
   // Initializing the dicom local dataSource
   const dataSourceModules = extensionManager.modules[MODULE_TYPES.DATA_SOURCE];
+  console.log('tengok');
+  console.log(dataSourceModules);
   const localDataSources = dataSourceModules.reduce((acc, curr) => {
     const mods = [];
     curr.module.forEach(mod => {
@@ -71,8 +75,56 @@ function Local({ modePath }: LocalProps) {
     '@ohif/extension-dicom-microscopy'
   );
 
+  async function displayDicom() {
+    console.log('displayDicom');
+    try {
+      // get the data into an ArrayBuffer
+      // const response = await fetch(dicomUrl).then(data => {
+      //   const obj = data;
+      //   console.log('boleh ke separate: ', data);
+      //   onDrop([obj]);
+      //  });
+
+      const response = await (await fetch(anotherdicom)).blob();
+      //const response = await fetch(dicomUrl);
+      //await (await fetch(dicomUrl)).blob()
+      //console.log('response: ', response);
+      //const buffer = await response.arrayBuffer();
+      //console.log('buffer: ', buffer);
+      onDrop([response]);
+      // parse it
+      //const image = dicomjs.parseImage(new DataView(buffer));
+      //console.log('image: ', image)
+      //console.log('number of image: ', image['numberOfFrames'])
+      // render to canvas
+      //renderer = new dicomjs.Renderer(canvas);
+      // decode, and display frame 0 on the canvas
+      // await renderer.render(image, 0);
+    } catch (e) {
+      //console.error(e);
+    }
+  }
+
+  displayDicom();
+
   const onDrop = async acceptedFiles => {
-    const studies = await filesToStudies(acceptedFiles, dataSource);
+    // acceptedFiles.forEach(file => {
+    //   const reader = new FileReader();
+
+    //   reader.onabort = () => console.log('file reading was aborted');
+    //   reader.onerror = () => console.log('file reading has failed');
+    //   reader.onload = () => {
+    //     // Do whatever you want with the file contents
+    //     const binaryStr = reader.result;
+    //     console.log('data to check: ', binaryStr);
+    //   };
+    //   reader.readAsArrayBuffer(file);
+    // });
+
+    // console.log('file diterima');
+    // console.log(acceptedFiles);
+
+    const studies = await filesToStudies(acceptedFiles);
 
     const query = new URLSearchParams();
 
@@ -96,8 +148,11 @@ function Local({ modePath }: LocalProps) {
 
     // Todo: navigate to work list and let user select a mode
     studies.forEach(id => query.append('StudyInstanceUIDs', id));
+    console.log('dalam studies: ', query);
     query.append('datasources', 'dicomlocal');
-
+    console.log('dalam studies2: ', query);
+    console.log('query: ', decodeURIComponent(query.toString()));
+    console.log('url: ', `/${modePath}?${decodeURIComponent(query.toString())}`);
     navigate(`/${modePath}?${decodeURIComponent(query.toString())}`);
   };
 

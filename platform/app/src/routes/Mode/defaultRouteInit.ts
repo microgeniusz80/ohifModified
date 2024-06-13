@@ -19,6 +19,7 @@ export async function defaultRouteInit(
   { servicesManager, studyInstanceUIDs, dataSource, filters, appConfig }: withAppTypes,
   hangingProtocolId
 ) {
+  console.log('init route');
   const { displaySetService, hangingProtocolService, uiNotificationService, customizationService } =
     servicesManager.services;
   /**
@@ -35,7 +36,7 @@ export async function defaultRouteInit(
 
     // Gets the studies list to use
     const studies = getStudies(studyInstanceUIDs, displaySets);
-
+    console.log('init route2');
     // study being displayed, and is thus the "active" study.
     const activeStudy = studies[0];
 

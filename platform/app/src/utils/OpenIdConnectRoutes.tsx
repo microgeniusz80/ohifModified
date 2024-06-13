@@ -92,16 +92,17 @@ function LoginComponent(userManager) {
 
 function OpenIdConnectRoutes({ oidc, routerBasename, userAuthenticationService }) {
   const userManager = initUserManager(oidc, routerBasename);
-
+  console.log('ilyas: in open ID');
   const getAuthorizationHeader = () => {
     const user = userAuthenticationService.getUser();
 
     // if the user is null return early, next time
     // we hit this function we will have a user
     if (!user) {
+      console.log('ilyas: user is null');
       return;
     }
-
+    console.log('ilyas: ', user.access_token);
     return {
       Authorization: `Bearer ${user.access_token}`,
     };

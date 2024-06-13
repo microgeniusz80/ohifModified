@@ -210,6 +210,7 @@ function WorkList({
   useEffect(() => {
     const fetchSeries = async studyInstanceUid => {
       try {
+        console.log('Fetching series', studyInstanceUid);
         const series = await dataSource.query.series.search(studyInstanceUid);
         seriesInStudiesMap.set(studyInstanceUid, sortBySeriesDate(series));
         setStudiesWithSeriesData([...studiesWithSeriesData, studyInstanceUid]);
@@ -274,7 +275,7 @@ function WorkList({
         {
           key: 'patientName',
           content: patientName ? (
-            <TooltipClipboard>{patientName}</TooltipClipboard>
+            <TooltipClipboard>{patientName}kundisa</TooltipClipboard>
           ) : (
             <span className="text-gray-700">(Empty)</span>
           ),
@@ -370,7 +371,7 @@ function WorkList({
               : appConfig.loadedModes
             ).map((mode, i) => {
               const modalitiesToCheck = modalities.replaceAll('/', '\\');
-
+              //console.log('modes tgk: ', mode);
               const { valid: isValidMode, description: invalidModeDescription } = mode.isValidMode({
                 modalities: modalitiesToCheck,
                 study,
@@ -386,6 +387,7 @@ function WorkList({
                 query.append('configUrl', filterValues.configUrl);
               }
               query.append('StudyInstanceUIDs', studyInstanceUid);
+              //console.log('mode routename: ', mode.routename);
               return (
                 mode.displayName && (
                   <Link
@@ -451,7 +453,7 @@ function WorkList({
       onClick: () =>
         show({
           content: AboutModal,
-          title: t('AboutModal:About OHIF Viewer'),
+          title: t('AboutModal:About OHIF Viewer Bodoh'),
           contentProps: { versionNumber, commitHash },
           containerDimensions: 'max-w-4xl max-h-4xl',
         }),

@@ -38,6 +38,7 @@ const StudyItem = ({
               className="mx-2 w-4 text-blue-300"
             />
             {numInstances}
+            <p>is there something here</p>
           </div>
         </div>
         <div className="flex flex-row items-center py-1">
@@ -59,7 +60,7 @@ const StudyItem = ({
               name="tracked"
               className="text-primary-light mr-2 w-4"
             />
-            {t('Tracked series', { trackedSeries: trackedSeries })}
+            {t('Tracked kundi series', { trackedSeries: trackedSeries })}
           </div>
         </div>
       )}

@@ -230,6 +230,7 @@ describe('MeasurementService.js', () => {
 
   describe('getMeasurement()', () => {
     it('return measurement service measurement with given id', () => {
+      console.log('measurement service inside test');
       measurementService.addMapping(
         source,
         annotationType,
