@@ -13,5 +13,7 @@ export function ImageViewerProvider({ StudyInstanceUIDs, children }: ImageViewer
     return { StudyInstanceUIDs };
   }, [StudyInstanceUIDs]);
 
+  console.log('the value: ', value);
+
   return <ImageViewerContext.Provider value={value}>{children}</ImageViewerContext.Provider>;
 }

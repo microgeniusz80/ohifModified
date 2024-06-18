@@ -214,12 +214,15 @@ const CornerstoneViewportDownloadForm = ({
   };
 
   const downloadBlob = (filename, fileType) => {
+    console.log('download blobbbb');
+    //console.log('the blob is: ' + canvas.toDataURL(fileType, 1.0););
     const file = `${filename}.${fileType}`;
     const divForDownloadViewport = document.querySelector(
       `div[data-viewport-uid="${VIEWPORT_ID}"]`
     );
 
     html2canvas(divForDownloadViewport).then(canvas => {
+      console.log('the blob is: ' + canvas.toDataURL(fileType, 1.0));
       const link = document.createElement('a');
       link.download = file;
       link.href = canvas.toDataURL(fileType, 1.0);

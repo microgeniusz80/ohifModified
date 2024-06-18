@@ -206,6 +206,7 @@ export default class DICOMSRDisplayTool extends AnnotationTool {
     options
   ) {
     let canvasCoordinates;
+    console.log('canvas coordinates');
     renderableData.map((data, index) => {
       canvasCoordinates = data.map(p => viewport.worldToCanvas(p));
       const handleGroupUID = '0';

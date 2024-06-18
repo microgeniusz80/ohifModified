@@ -10,6 +10,7 @@ import { useAppConfig } from '@state';
 function ViewerViewportGrid(props: withAppTypes) {
   console.log('im called viewerViewportGrid tahi');
   const { servicesManager, viewportComponents, dataSource } = props;
+  console.log('viewerViewportGrid', viewportComponents);
   const [viewportGrid, viewportGridService] = useViewportGrid();
   const [appConfig] = useAppConfig();
 

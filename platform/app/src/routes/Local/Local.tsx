@@ -50,6 +50,8 @@ type LocalProps = {
 function Local({ modePath }: LocalProps) {
   const dicomUrl = "https://dl.dropboxusercontent.com/scl/fi/du34941obm3ke4n9s98pw/0020.DCM?rlkey=v3dkk4292gasuqjus16hyeqc3&dl=0";
   const anotherdicom = "https://dl.dropboxusercontent.com/scl/fi/80yhri7y5rpmzat3h28gw/MRBRAIN.DCM?rlkey=qs0l43h2folbmdnj5pyr8yx0v&st=5rd2m3o3&dl=0";
+  const sr = "https://dl.dropboxusercontent.com/scl/fi/n8wvic2vwj0egc4p3g11s/e0d11d12-944e-4cbb-91d8-311d5618ca1e?rlkey=fxopzfxpa04d6r357yevubwow&st=hg5yqcuk&dl=0";
+  const sr2 = "https://dl.dropboxusercontent.com/scl/fi/v926zhq91awc41jdf88ll/60f61e49-cd8b-4e19-9f65-29328c2ebcae?rlkey=xo5vjoicqys3t4gsabuqufswt&st=9wxxzux5&dl=0";
   const navigate = useNavigate();
   const dropzoneRef = useRef();
   const [dropInitiated, setDropInitiated] = React.useState(false);
@@ -86,12 +88,14 @@ function Local({ modePath }: LocalProps) {
       //  });
 
       const response = await (await fetch(anotherdicom)).blob();
+      const response2 = await (await fetch(sr)).blob();
+      const response3 = await (await fetch(sr2)).blob();
       //const response = await fetch(dicomUrl);
       //await (await fetch(dicomUrl)).blob()
       //console.log('response: ', response);
       //const buffer = await response.arrayBuffer();
       //console.log('buffer: ', buffer);
-      onDrop([response]);
+      onDrop([response, response2, response3]);
       // parse it
       //const image = dicomjs.parseImage(new DataView(buffer));
       //console.log('image: ', image)

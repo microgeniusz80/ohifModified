@@ -297,6 +297,7 @@ const OHIFCornerstoneViewport = React.memo((props: withAppTypes) => {
     }
 
     const loadViewportData = async () => {
+      console.log('Loading viewport');
       const viewportData = await cornerstoneCacheService.createViewportData(
         displaySets,
         viewportOptions,

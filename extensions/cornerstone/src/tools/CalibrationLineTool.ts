@@ -25,6 +25,7 @@ class CalibrationLineTool extends LengthTool {
     );
     // for display, round to 2 decimal points
     const lengthPx = Math.round(calculateLength2(canvasPoint1, canvasPoint2) * 100) / 100;
+    console.log('the length inside', lengthPx);
 
     const textLines = [`${lengthPx}px`];
 
