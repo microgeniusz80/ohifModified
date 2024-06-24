@@ -53,9 +53,10 @@ const commandsModule = (props: withAppTypes) => {
      * that you wish to serialize.
      */
     downloadReport: ({ measurementData, additionalFindingTypes, options = {} }) => {
+      console.log('before blob')
       const srDataset = actions.generateReport(measurementData, additionalFindingTypes, options);
       const reportBlob = dcmjs.data.datasetToBlob(srDataset);
-
+      console.log('report blob', reportBlob);
       //Create a URL for the binary.
       const objectUrl = URL.createObjectURL(reportBlob);
       window.location.assign(objectUrl);

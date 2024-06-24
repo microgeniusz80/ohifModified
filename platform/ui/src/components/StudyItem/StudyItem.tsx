@@ -60,7 +60,7 @@ const StudyItem = ({
               name="tracked"
               className="text-primary-light mr-2 w-4"
             />
-            {t('Tracked kundi series', { trackedSeries: trackedSeries })}
+            {t('Tracked series', { trackedSeries: trackedSeries })}
           </div>
         </div>
       )}

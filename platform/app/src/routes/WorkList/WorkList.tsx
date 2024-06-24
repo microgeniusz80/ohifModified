@@ -275,7 +275,7 @@ function WorkList({
         {
           key: 'patientName',
           content: patientName ? (
-            <TooltipClipboard>{patientName}kundisa</TooltipClipboard>
+            <TooltipClipboard>{patientName}</TooltipClipboard>
           ) : (
             <span className="text-gray-700">(Empty)</span>
           ),

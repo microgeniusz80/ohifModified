@@ -8,7 +8,7 @@ import classNames from 'classnames';
 import { useAppConfig } from '@state';
 
 function ViewerViewportGrid(props: withAppTypes) {
-  console.log('im called viewerViewportGrid tahi');
+  console.log('im called viewerViewportGrid talitest');
   const { servicesManager, viewportComponents, dataSource } = props;
   console.log('viewerViewportGrid', viewportComponents);
   const [viewportGrid, viewportGridService] = useViewportGrid();
@@ -331,7 +331,7 @@ function ViewerViewportGrid(props: withAppTypes) {
           }}
           isActive={isActive}
         >
-          
+
           <div
             data-cy="viewport-pane"
             className={classNames('flex h-full w-full flex-col', {

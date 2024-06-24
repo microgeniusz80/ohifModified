@@ -175,9 +175,61 @@ function createDicomLocalApi(dicomLocalConfig) {
     store: {
       dicom: naturalizedReport => {
         const reportBlob = dcmjs.data.datasetToBlob(naturalizedReport);
+        console.log('blob lalala')
+        console.log('solat', reportBlob)
+
+        const reader = new FileReader();
+
+
+        reader.onload = async function (event) {
+          console.log('solat 3', reader.result);
+
+          console.log('change back to blob')
+
+          //const base64Response = await fetch(`data:image/jpeg;base64,${base64Data}`);
+          const base64Response = await fetch(reader.result);
+          const blob = await base64Response.blob();
+          console.log('final blob', blob);
+          // const adata = reader.result
+          // console.log('changing back to blob')
+
+          // const byteCharacters = atob(adata);
+          // const byteArrays = [];
+
+          // for (let i = 0; i < byteCharacters.length; i++) {
+          //     byteArrays.push(byteCharacters.charCodeAt(i));
+          // }
+
+          // const byteArray = new Uint8Array(byteArrays);
+          // const theblobby = new Blob([byteArray], { type: "text/plain" });
+          // console.log('the blobbed', theblobby)
+
+//           I found the answer, I had to encode in Base 64 the content of my Blob:
+
+            // var reader = new FileReader
+            // reader.readAsDataURL(blob)
+            // var data = reader.result;
+            // //don't need type informations
+            // data = data.split(",").pop();
+            // and just after the "Content-Type" value in the second part of the request, I added this line:
+
+            // 'Content-Transfer-Encoding: base64'
+            // and now it works!
+
+            // and don't worry, in my code I used my FileReader in an asynchronous way, I just simplified here for brevity.
+
+        };
+
+        // reader.readAsText(reportBlob);
+        reader.readAsDataURL(reportBlob)
+
+
+
+
 
         //Create a URL for the binary.
         var objectUrl = URL.createObjectURL(reportBlob);
+        console.log('object', objectUrl)
         window.location.assign(objectUrl);
       },
     },

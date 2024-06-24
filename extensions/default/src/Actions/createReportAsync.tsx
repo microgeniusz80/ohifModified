@@ -20,6 +20,8 @@ async function createReportAsync({
 
   try {
     const naturalizedReport = await getReport();
+    console.log('the report', naturalizedReport)
+    console.log('dunno')
 
     // The "Mode" route listens for DicomMetadataStore changes
     // When a new instance is added, it listens and
@@ -32,7 +34,7 @@ async function createReportAsync({
 
     uiNotificationService.show({
       title: 'Create Report',
-      message: `${reportType} saved successfully`,
+      message: `${reportType} saved successfully macam talitest`,
       type: 'success',
     });
 

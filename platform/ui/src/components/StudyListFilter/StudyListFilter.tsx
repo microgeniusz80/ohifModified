@@ -71,7 +71,7 @@ const StudyListFilter = ({
                   variant="h6"
                   className="text-primary-light"
                 >
-                  {`${t('Number of kundi studies')}: `}
+                  {`${t('Number of studies')}: `}
                 </Typography>
                 <Typography
                   variant="h6"

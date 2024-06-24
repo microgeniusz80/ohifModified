@@ -12,6 +12,8 @@ export default function dicomRTAnnotationExport(annotations) {
     DicomMetadataStore
   );
   const reportBlob = datasetToBlob(dataset);
+  console.log('the data: ', reportBlob);
+
 
   //Create a URL for the binary.
   var objectUrl = URL.createObjectURL(reportBlob);

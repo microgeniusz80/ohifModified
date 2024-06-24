@@ -67,6 +67,7 @@ const CORNERSTONE_FREETEXT_CODE_VALUE = 'CORNERSTONEFREETEXT';
  *     in this DICOM SR Display Set already.
  */
 function addInstances(instances: InstanceMetadata[], displaySetService: DisplaySetService) {
+  console.log('lalala 2');
   this.instances.push(...instances);
   utils.sortStudyInstances(this.instances);
   // The last instance is the newest one, so is the one most interesting.

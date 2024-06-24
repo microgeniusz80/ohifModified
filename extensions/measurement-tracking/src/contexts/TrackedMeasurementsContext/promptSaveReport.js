@@ -18,6 +18,7 @@ async function promptSaveReport({ servicesManager, commandsManager, extensionMan
     });
 
     if (promptResult.action === RESPONSE.CREATE_REPORT) {
+      console.log('takde blob', promptResult)
       const dataSources = extensionManager.getDataSources();
       const dataSource = dataSources[0];
       const measurements = measurementService.getMeasurements();
@@ -48,10 +49,12 @@ async function promptSaveReport({ servicesManager, commandsManager, extensionMan
           'CORNERSTONE_STRUCTURED_REPORT'
         );
       };
+
       displaySetInstanceUIDs = await createReportAsync({
         servicesManager,
         getReport,
       });
+      
     } else if (promptResult.action === RESPONSE.CANCEL) {
       // Do nothing
     }

@@ -111,7 +111,10 @@ export default function PanelMeasurementTable({
       // creating too many series instances.
       const options = findSRWithSameSeriesDescription(SeriesDescription, displaySetService);
 
+      //meow
       const getReport = async () => {
+        console.log('meow');
+        console.log('tracked measurement results', trackedMeasurements);
         return commandsManager.runCommand(
           'storeMeasurements',
           {

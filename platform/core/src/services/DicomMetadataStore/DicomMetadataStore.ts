@@ -164,6 +164,7 @@ const BaseImplementation = {
     study.addInstanceToSeries(naturalizedDataset);
   },
   addInstances(instances, madeInClient = false) {
+    console.log('lalala 1')
     const { StudyInstanceUID, SeriesInstanceUID } = instances[0];
 
     let study = _model.studies.find(study => study.StudyInstanceUID === StudyInstanceUID);

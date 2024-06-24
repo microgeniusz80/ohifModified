@@ -1,14 +1,12 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import classnames from 'classnames';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import { DicomMetadataStore, MODULE_TYPES } from '@ohif/core';
-
 import Dropzone from 'react-dropzone';
 import filesToStudies from './filesToStudies';
-
 import { extensionManager } from '../../App.tsx';
-
 import { Icon, Button, LoadingIndicatorProgress } from '@ohif/ui';
+import { sample } from 'lodash';
 
 const getLoadButton = (onDrop, text, isDir) => {
   return (
@@ -42,24 +40,21 @@ const getLoadButton = (onDrop, text, isDir) => {
     </Dropzone>
   );
 };
-
 type LocalProps = {
   modePath: string;
 };
 
+
 function Local({ modePath }: LocalProps) {
-  const dicomUrl = "https://dl.dropboxusercontent.com/scl/fi/du34941obm3ke4n9s98pw/0020.DCM?rlkey=v3dkk4292gasuqjus16hyeqc3&dl=0";
-  const anotherdicom = "https://dl.dropboxusercontent.com/scl/fi/80yhri7y5rpmzat3h28gw/MRBRAIN.DCM?rlkey=qs0l43h2folbmdnj5pyr8yx0v&st=5rd2m3o3&dl=0";
-  const sr = "https://dl.dropboxusercontent.com/scl/fi/n8wvic2vwj0egc4p3g11s/e0d11d12-944e-4cbb-91d8-311d5618ca1e?rlkey=fxopzfxpa04d6r357yevubwow&st=hg5yqcuk&dl=0";
-  const sr2 = "https://dl.dropboxusercontent.com/scl/fi/v926zhq91awc41jdf88ll/60f61e49-cd8b-4e19-9f65-29328c2ebcae?rlkey=xo5vjoicqys3t4gsabuqufswt&st=9wxxzux5&dl=0";
+  const [searchParams, setSearchParams] = useSearchParams();
+  //const query = new URLSearchParams(this.props.location.search);
   const navigate = useNavigate();
   const dropzoneRef = useRef();
   const [dropInitiated, setDropInitiated] = React.useState(false);
 
   // Initializing the dicom local dataSource
   const dataSourceModules = extensionManager.modules[MODULE_TYPES.DATA_SOURCE];
-  console.log('tengok');
-  console.log(dataSourceModules);
+
   const localDataSources = dataSourceModules.reduce((acc, curr) => {
     const mods = [];
     curr.module.forEach(mod => {
@@ -72,49 +67,90 @@ function Local({ modePath }: LocalProps) {
 
   const firstLocalDataSource = localDataSources[0];
   const dataSource = firstLocalDataSource.createDataSource({});
-
   const microscopyExtensionLoaded = extensionManager.registeredExtensionIds.includes(
     '@ohif/extension-dicom-microscopy'
   );
 
-  async function displayDicom() {
-    console.log('displayDicom');
-    try {
-      // get the data into an ArrayBuffer
-      // const response = await fetch(dicomUrl).then(data => {
-      //   const obj = data;
-      //   console.log('boleh ke separate: ', data);
-      //   onDrop([obj]);
-      //  });
-
-      const response = await (await fetch(anotherdicom)).blob();
-      const response2 = await (await fetch(sr)).blob();
-      const response3 = await (await fetch(sr2)).blob();
-      //const response = await fetch(dicomUrl);
-      //await (await fetch(dicomUrl)).blob()
-      //console.log('response: ', response);
-      //const buffer = await response.arrayBuffer();
-      //console.log('buffer: ', buffer);
-      onDrop([response, response2, response3]);
-      // parse it
-      //const image = dicomjs.parseImage(new DataView(buffer));
-      //console.log('image: ', image)
-      //console.log('number of image: ', image['numberOfFrames'])
-      // render to canvas
-      //renderer = new dicomjs.Renderer(canvas);
-      // decode, and display frame 0 on the canvas
-      // await renderer.render(image, 0);
-    } catch (e) {
-      //console.error(e);
-    }
+  async function uploadData() {
+    const postURL = 'https://provider.ecosys.mhn.asia/api/v1/factory/multiple-file-base64?folderPath=ImagingResult/';
+    
+    const sampleData = {
+      "resource": [
+          {
+              "name": "ilyas",
+              "path": "ilyas",
+              "type": "folder"
+          },
+          {
+              "name": "ilyas/testfile.pdf",
+              "path": "ilyas/testfile.pdf",
+              "type": "file",
+              "is_base64": true,
+              "content_type": "application/pdf",
+              "content": "JVBE",
+          }
+      ]
+  }
+    
+    const rawResponse = await fetch(postURL, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      // body: JSON.stringify({a: 1, b: 'Textual content'})
+      body: JSON.stringify(sampleData),
+    });
+    const content = await rawResponse.json();
+  
+    console.log(content);
   }
 
+  async function displayDicom() {
+    const paramdata = searchParams.get('id');
+    console.log('param: ', paramdata);
+
+    //const paramurl = "https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/" + "da34099a-6a48-4e73-9d67-a7350d496043/N2D0002.dcm" + "?content=true&is_base64=true&view=true";
+
+    const paramurl = "https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/" + paramdata + "?content=true&is_base64=true&view=true";
+    try {
+      let a = '';
+
+      useEffect(async () => {
+        await fetch('https://provider.ecosys.mhn.asia/api/v1/factory/get-token')
+             .then((res) => res.json())
+             .then((data) => {
+                a = data.token;
+             })
+             .catch((err) => {
+                console.log(err.message);
+             });
+
+        await fetch(paramurl,{
+              method:'GET',
+              headers: {
+                "X-DreamFactory-API-Key": "36fda24fe5588fa4285ac6c6c2fdfbdb6b6bc9834699774c9bf777f706d05a88",
+                "X-DreamFactory-Session-Token": a,
+              },
+            }).then(
+              response => {
+                return response.blob().then(blob => {
+                    onDrop([blob]);
+                })
+              }
+            ).catch((err) => {
+            console.log(err.message);
+          });
+      }, []);
+    } catch (e) {
+      console.error(e);
+    }
+  }
   displayDicom();
+  //uploadData();
 
   const onDrop = async acceptedFiles => {
     // acceptedFiles.forEach(file => {
     //   const reader = new FileReader();
-
     //   reader.onabort = () => console.log('file reading was aborted');
     //   reader.onerror = () => console.log('file reading has failed');
     //   reader.onload = () => {
@@ -124,14 +160,10 @@ function Local({ modePath }: LocalProps) {
     //   };
     //   reader.readAsArrayBuffer(file);
     // });
-
     // console.log('file diterima');
     // console.log(acceptedFiles);
-
     const studies = await filesToStudies(acceptedFiles);
-
     const query = new URLSearchParams();
-
     if (microscopyExtensionLoaded) {
       // TODO: for microscopy, we are forcing microscopy mode, which is not ideal.
       //     we should make the local drag and drop navigate to the worklist and
@@ -142,14 +174,11 @@ function Local({ modePath }: LocalProps) {
           study.series.findIndex(s => s.Modality === 'SM' || s.instances[0].Modality === 'SM') >= 0
         );
       });
-
       if (smStudies.length > 0) {
         smStudies.forEach(id => query.append('StudyInstanceUIDs', id));
-
         modePath = 'microscopy';
       }
     }
-
     // Todo: navigate to work list and let user select a mode
     studies.forEach(id => query.append('StudyInstanceUIDs', id));
     console.log('dalam studies: ', query);
@@ -159,7 +188,6 @@ function Local({ modePath }: LocalProps) {
     console.log('url: ', `/${modePath}?${decodeURIComponent(query.toString())}`);
     navigate(`/${modePath}?${decodeURIComponent(query.toString())}`);
   };
-
   // Set body style
   useEffect(() => {
     document.body.classList.add('bg-black');
@@ -167,7 +195,6 @@ function Local({ modePath }: LocalProps) {
       document.body.classList.remove('bg-black');
     };
   }, []);
-
   return (
     <Dropzone
       ref={dropzoneRef}
@@ -219,5 +246,4 @@ function Local({ modePath }: LocalProps) {
     </Dropzone>
   );
 }
-
 export default Local;
