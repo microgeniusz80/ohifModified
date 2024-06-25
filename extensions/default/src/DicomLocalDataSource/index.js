@@ -176,7 +176,7 @@ function createDicomLocalApi(dicomLocalConfig) {
       dicom: naturalizedReport => {
         const reportBlob = dcmjs.data.datasetToBlob(naturalizedReport);
         console.log('blob lalala')
-        console.log('solat', naturalizedReport)
+        console.log('solat', naturalizedReport['StudyID']);
 
         const reader = new FileReader();
 
@@ -247,7 +247,7 @@ function createDicomLocalApi(dicomLocalConfig) {
 
           console.log('sending now');
 
-          const MY_TOKEN = "sl.B3wnGDmQuCCfroJ0EGA2-BNlS9lFHf1F3c8Y19V7chqNWTxtOUtR5zHpB5QIhf9HS5WdMk5FjxeUUnoVd855g0DX7Q4Rvod0m9LApJQEhs0AishTQOLTDm_zQWn5leqeQedT1HBuGV7KWKO4J96aZhM"
+          const MY_TOKEN = "sl.B31opC6w3I63ISOc-woSDXy5msX2gCtucS7TD7uzaTQrNuyRQtde_rVdV_DjEulbGHyETR6Pn6MubaEVJaF5mWSIVvWPmnO8EUx2eOAQsHFJpVfXfW89So_61etuIC9SEfhARAugkH6T6_IzCOSm8fQ"
 
           await fetch('https://content.dropboxapi.com/2/files/upload', {
             method: 'post',
@@ -255,13 +255,30 @@ function createDicomLocalApi(dicomLocalConfig) {
             headers: {'Authorization': 'Bearer '+MY_TOKEN,
                       'Content-Type': 'application/octet-stream',
                       'Accept': 'application/json',
-                'Dropbox-API-Arg': '{"path": "/dicom3/file002","mode": "add","autorename": false,"mute": false,"strict_conflict": false}'
+                'Dropbox-API-Arg': '{"path": "/dicom4/file002","mode": "add","autorename": false,"mute": false,"strict_conflict": false}'
                                         }
           }).then(function(response) {
             console.log('berjaya')
                 console.log("berjaya", response.json());
           });
 
+
+
+
+          //dream factory file upload here ****************************************************************************
+
+          await fetch('https://content.dropboxapi.com/2/files/upload', {
+            method: 'post',
+            body: reportBlob, //Base64
+            headers: {'Authorization': 'Bearer '+MY_TOKEN,
+                      'Content-Type': 'application/octet-stream',
+                      'Accept': 'application/json',
+                'Dropbox-API-Arg': '{"path": "/dicom4/file002","mode": "add","autorename": false,"mute": false,"strict_conflict": false}'
+                                        }
+          }).then(function(response) {
+            console.log('berjaya')
+                console.log("berjaya", response.json());
+          });
 
 
 

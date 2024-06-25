@@ -120,6 +120,7 @@ function Local({ modePath }: LocalProps) {
              .then((res) => res.json())
              .then((data) => {
                 a = data.token;
+                console.log('the token: ',a);
              })
              .catch((err) => {
                 console.log(err.message);
