@@ -176,7 +176,7 @@ function createDicomLocalApi(dicomLocalConfig) {
       dicom: naturalizedReport => {
         const reportBlob = dcmjs.data.datasetToBlob(naturalizedReport);
         console.log('blob lalala')
-        console.log('solat', reportBlob)
+        console.log('solat', naturalizedReport)
 
         const reader = new FileReader();
 
@@ -184,12 +184,87 @@ function createDicomLocalApi(dicomLocalConfig) {
         reader.onload = async function (event) {
           console.log('solat 3', reader.result);
 
+          var provenanceJson = //keeps provenance fhir resource format, so that we can modify its content, after user signed the canvas
+          {
+            "resourceType": "Provenance",
+            "target": [{
+                "reference": "",
+                "type":"" // put patient ID here to save his/her provenance information
+            },
+            {
+              "reference": "",
+              "type":"" // put patient ID here to save his/her provenance information
+            }],
+            "recorded": "",
+            "agent": [{
+                "role": [{
+                    "coding": [{
+                        "system": "http://terminology.hl7.org/CodeSystem/v3-RoleClass",
+                        "code": "PAT",
+                        "display": "Patient"
+                    }]
+                }],
+                "who": {
+                    "reference": ""
+                }
+            }],
+            "signature": [{
+                "type": [{
+                    "system": "urn:iso-astm:E1762-95:2013",
+                    "code": "1.2.840.10065.1.12.1.1",
+                    "display": "Author's Signature"
+                }],
+                "when": "",
+                "who": {
+                    "reference": ""
+                },
+                "data": ""
+            }]
+          };
+
+          provenanceJson.signature[0].data = reader.result;
+
+          console.log(JSON.stringify(provenanceJson))
+
+
+
+
+
+
+
+
+
+
+
+
+
           console.log('change back to blob')
 
           //const base64Response = await fetch(`data:image/jpeg;base64,${base64Data}`);
           const base64Response = await fetch(reader.result);
           const blob = await base64Response.blob();
           console.log('final blob', blob);
+
+          console.log('sending now');
+
+          const MY_TOKEN = "sl.B3wnGDmQuCCfroJ0EGA2-BNlS9lFHf1F3c8Y19V7chqNWTxtOUtR5zHpB5QIhf9HS5WdMk5FjxeUUnoVd855g0DX7Q4Rvod0m9LApJQEhs0AishTQOLTDm_zQWn5leqeQedT1HBuGV7KWKO4J96aZhM"
+
+          await fetch('https://content.dropboxapi.com/2/files/upload', {
+            method: 'post',
+            body: reportBlob, //Base64
+            headers: {'Authorization': 'Bearer '+MY_TOKEN,
+                      'Content-Type': 'application/octet-stream',
+                      'Accept': 'application/json',
+                'Dropbox-API-Arg': '{"path": "/dicom3/file002","mode": "add","autorename": false,"mute": false,"strict_conflict": false}'
+                                        }
+          }).then(function(response) {
+            console.log('berjaya')
+                console.log("berjaya", response.json());
+          });
+
+
+
+
           // const adata = reader.result
           // console.log('changing back to blob')
 
