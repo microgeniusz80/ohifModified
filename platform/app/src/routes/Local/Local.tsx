@@ -7,7 +7,7 @@ import filesToStudies from './filesToStudies';
 import { extensionManager } from '../../App.tsx';
 import { Icon, Button, LoadingIndicatorProgress } from '@ohif/ui';
 import { sample } from 'lodash';
-import { ayam, kucing } from '../../../../../extensions/globaldata/globallydata.js';
+import { ayam, kucing, reloadtheLink, reloadLink } from '../../../../../extensions/globaldata/globallydata.js';
 const getLoadButton = (onDrop, text, isDir) => {
   return (
     <Dropzone
@@ -101,12 +101,21 @@ function Local({ modePath }: LocalProps) {
   }
   async function displayDicom() {
     const paramdata = searchParams.get('id');
+    reloadtheLink(paramdata);
+    console.log('linkdata', reloadLink);
     console.log('param: ', paramdata);
     console.log('the saved url:', ayam);
     console.log('fungsi kucing:', kucing(searchParams.get('id')));
     console.log('the saved url:', ayam);
+    const currentFolder = searchParams.get('id').split('/')[0];
+    console.log('nama folder', currentFolder)
     //const paramurl = "https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/" + "da34099a-6a48-4e73-9d67-a7350d496043/N2D0002.dcm" + "?content=true&is_base64=true&view=true";
     const paramurl = "https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/" + paramdata + "?content=true&is_base64=true&view=true";
+    const semuaFile = "https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/" + currentFolder + "/";
+
+    var filelist = [];
+    var bloblist = [];
+
     try {
       let a = '';
       useEffect(async () => {
@@ -119,21 +128,84 @@ function Local({ modePath }: LocalProps) {
              .catch((err) => {
                 console.log(err.message);
              });
-        await fetch(paramurl,{
-              method:'GET',
-              headers: {
-                "X-DreamFactory-API-Key": "36fda24fe5588fa4285ac6c6c2fdfbdb6b6bc9834699774c9bf777f706d05a88",
-                "X-DreamFactory-Session-Token": a,
-              },
-            }).then(
-              response => {
-                return response.blob().then(blob => {
-                    onDrop([blob]);
-                })
+        // await fetch(paramurl,{
+        //       method:'GET',
+        //       headers: {
+        //         "X-DreamFactory-API-Key": "36fda24fe5588fa4285ac6c6c2fdfbdb6b6bc9834699774c9bf777f706d05a88",
+        //         "X-DreamFactory-Session-Token": a,
+        //       },
+        //     }).then(
+        //       response => {
+        //         return response.blob().then(blob => {
+        //             onDrop([blob]);
+        //         })
+        //       }
+        //     ).catch((err) => {
+        //     console.log(err.message);
+        //   });
+
+          await fetch(semuaFile, {
+            method:'GET',
+            headers: {
+              "X-DreamFactory-API-Key": "36fda24fe5588fa4285ac6c6c2fdfbdb6b6bc9834699774c9bf777f706d05a88",
+              "X-DreamFactory-Session-Token": a,
+            },
+          }).then((res) => res.json())
+          .then((data) => {
+             console.log('the semua file data: ',data.resource);
+             filelist = data.resource;
+          }).catch((err) => {
+          console.log(err.message);
+        });
+
+        console.log('nampak: ', filelist)
+        // filelist.forEach(async (file) => {
+        //   console.log('file: ', file.path)
+
+        //     await fetch("https://dreamfactory5.ecosys.mhn.asia/api/v2/files/" + file.path + "?content=true&is_base64=true&view=true",{
+        //       method:'GET',
+        //       headers: {
+        //         "X-DreamFactory-API-Key": "36fda24fe5588fa4285ac6c6c2fdfbdb6b6bc9834699774c9bf777f706d05a88",
+        //         "X-DreamFactory-Session-Token": a,
+        //       },
+        //     }).then(
+        //       response => {
+        //         return response.blob().then(blob => {
+        //           onDrop([blob])
+        //         })
+        //       }
+        //     ).catch((err) => {
+        //     console.log(err.message);
+        //   });
+        // })
+
+              var theOptions = {
+                method:'GET',
+                headers: {
+                  "X-DreamFactory-API-Key": "36fda24fe5588fa4285ac6c6c2fdfbdb6b6bc9834699774c9bf777f706d05a88",
+                  "X-DreamFactory-Session-Token": a,
+                },
               }
-            ).catch((err) => {
-            console.log(err.message);
-          });
+
+        // await filelist.forEach(async (file) => {
+        //   var theresponse = await (await fetch("https://dreamfactory5.ecosys.mhn.asia/api/v2/files/" + file.path + "?content=true&is_base64=true&view=true", theOptions)).blob();
+        //   console.log('respon dia',theresponse)
+          
+        //   bloblist = [...bloblist, theresponse]
+        //   //onDrop([theresponse])
+
+        // })
+
+        for (var file of filelist){
+            var theresponse = await (await fetch("https://dreamfactory5.ecosys.mhn.asia/api/v2/files/" + file.path + "?content=true&is_base64=true&view=true", theOptions)).blob();
+          console.log('respon dia',theresponse)
+          bloblist.push(theresponse)
+        }
+
+        console.log('bloblist:',bloblist)
+
+        onDrop(bloblist);
+
       }, []);
     } catch (e) {
       console.error(e);

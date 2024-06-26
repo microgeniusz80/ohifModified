@@ -2,7 +2,7 @@ import { DicomMetadataStore, IWebApiDataSource, utils } from '@ohif/core';
 import OHIF from '@ohif/core';
 import dcmjs from 'dcmjs';
 import { useEffect } from 'react';
-import { ayam, kucing } from '../../../globaldata/globallydata';
+import { ayam, kucing, reloadLink } from '../../../globaldata/globallydata';
 
 const metadataProvider = OHIF.classes.MetadataProvider;
 const { EVENTS } = DicomMetadataStore;
@@ -250,6 +250,8 @@ function createDicomLocalApi(dicomLocalConfig) {
               }).then(function(response) {
                 console.log("dreamFile", response.json());
               });
+
+              window.location.href = reloadLink;
 
             }
 
