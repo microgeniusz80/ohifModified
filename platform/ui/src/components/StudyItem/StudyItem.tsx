@@ -18,6 +18,7 @@ const StudyItem = ({
   onClick,
 }) => {
   const { t } = useTranslation('StudyItem');
+  console.log('study measure');
   return (
     <div
       className={classnames(
@@ -38,7 +39,6 @@ const StudyItem = ({
               className="mx-2 w-4 text-blue-300"
             />
             {numInstances}
-            <p>is there something here</p>
           </div>
         </div>
         <div className="flex flex-row items-center py-1">

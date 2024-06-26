@@ -68,7 +68,7 @@ export default function CreateReportDialogPrompt(uiDialogService, { extensionMan
       useLastPosition: false,
       showOverlay: true,
       contentProps: {
-        title: 'Create Talitest',
+        title: 'Create Report',
         value: {
           label: '',
           dataSourceName: extensionManager.activeDataSource,

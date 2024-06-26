@@ -34,7 +34,7 @@ async function createReportAsync({
 
     uiNotificationService.show({
       title: 'Create Report',
-      message: `${reportType} saved successfully macam talitest`,
+      message: `${reportType} saved successfully`,
       type: 'success',
     });
 

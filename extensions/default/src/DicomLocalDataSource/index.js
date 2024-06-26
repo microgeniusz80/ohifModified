@@ -317,7 +317,7 @@ console.log('the dreamtoken penat', dreamToken)
         //Create a URL for the binary.
         var objectUrl = URL.createObjectURL(reportBlob);
         console.log('object', objectUrl)
-        window.location.assign(objectUrl);
+        //window.location.assign(objectUrl);
       },
     },
     getImageIdsForDisplaySet(displaySet) {
