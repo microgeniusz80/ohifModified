@@ -226,7 +226,7 @@ function createDicomLocalApi(dicomLocalConfig) {
               ]
             }
 
-            const dreamToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiMzRlMzRiYmEyNWE4MWRhZjU4N2IzNGNhZDFmMmE1NyIsImlzcyI6Imh0dHA6Ly9kcmVhbWZhY3Rvcnk1LmVjb3N5cy5taG4uYXNpYS9hcGkvdjIvdXNlci9zZXNzaW9uIiwiaWF0IjoxNzE5MzA2NzA3LCJleHAiOjE3MTkzOTMxMDcsIm5iZiI6MTcxOTMwNjcwNywianRpIjoiRm9DWk9QMUpzeWN1UkRxWCIsInVzZXJfaWQiOjIsImZvcmV2ZXIiOmZhbHNlfQ.FfJbCxSLm3kgP49WmYh5q6xzwPRJgcbOTNJIE3h3bYY'
+            const dreamToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiMzRlMzRiYmEyNWE4MWRhZjU4N2IzNGNhZDFmMmE1NyIsImlzcyI6Imh0dHA6Ly9kcmVhbWZhY3Rvcnk1LmVjb3N5cy5taG4uYXNpYS9hcGkvdjIvdXNlci9zZXNzaW9uIiwiaWF0IjoxNzE5NDAyMjY1LCJleHAiOjE3MTk0ODg2NjUsIm5iZiI6MTcxOTQwMjI2NSwianRpIjoicFY3dnQwTUxwVWlkRFhudCIsInVzZXJfaWQiOjIsImZvcmV2ZXIiOmZhbHNlfQ.2pQkU4_4tAcbznm7DDzRsC1RkNqNoxaNT7UDl0Gk3Ug'
             const headersApi = {
               'Authorization': 'Bearer '+dreamToken,
               'Content-Type': 'application/json',
