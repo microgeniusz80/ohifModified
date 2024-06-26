@@ -7,7 +7,7 @@ import filesToStudies from './filesToStudies';
 import { extensionManager } from '../../App.tsx';
 import { Icon, Button, LoadingIndicatorProgress } from '@ohif/ui';
 import { sample } from 'lodash';
-
+import { ayam, kucing } from '../../../../../extensions/globaldata/globallydata.js';
 const getLoadButton = (onDrop, text, isDir) => {
   return (
     <Dropzone
@@ -44,17 +44,14 @@ type LocalProps = {
   modePath: string;
 };
 
-
 function Local({ modePath }: LocalProps) {
   const [searchParams, setSearchParams] = useSearchParams();
   //const query = new URLSearchParams(this.props.location.search);
   const navigate = useNavigate();
   const dropzoneRef = useRef();
   const [dropInitiated, setDropInitiated] = React.useState(false);
-
   // Initializing the dicom local dataSource
   const dataSourceModules = extensionManager.modules[MODULE_TYPES.DATA_SOURCE];
-
   const localDataSources = dataSourceModules.reduce((acc, curr) => {
     const mods = [];
     curr.module.forEach(mod => {
@@ -64,13 +61,11 @@ function Local({ modePath }: LocalProps) {
     });
     return acc.concat(mods);
   }, []);
-
   const firstLocalDataSource = localDataSources[0];
   const dataSource = firstLocalDataSource.createDataSource({});
   const microscopyExtensionLoaded = extensionManager.registeredExtensionIds.includes(
     '@ohif/extension-dicom-microscopy'
   );
-
   async function uploadData() {
     const postURL = 'https://provider.ecosys.mhn.asia/api/v1/factory/multiple-file-base64?folderPath=ImagingResult/';
     
@@ -88,8 +83,8 @@ function Local({ modePath }: LocalProps) {
               "is_base64": true,
               "content_type": "application/pdf",
               "content": "JVBE",
-          }
-      ]
+          }
+      ]
   }
     
     const rawResponse = await fetch(postURL, {
@@ -104,17 +99,16 @@ function Local({ modePath }: LocalProps) {
   
     console.log(content);
   }
-
   async function displayDicom() {
     const paramdata = searchParams.get('id');
     console.log('param: ', paramdata);
-
+    console.log('the saved url:', ayam);
+    console.log('fungsi kucing:', kucing(searchParams.get('id')));
+    console.log('the saved url:', ayam);
     //const paramurl = "https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/" + "da34099a-6a48-4e73-9d67-a7350d496043/N2D0002.dcm" + "?content=true&is_base64=true&view=true";
-
     const paramurl = "https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/" + paramdata + "?content=true&is_base64=true&view=true";
     try {
       let a = '';
-
       useEffect(async () => {
         await fetch('https://provider.ecosys.mhn.asia/api/v1/factory/get-token')
              .then((res) => res.json())
@@ -125,7 +119,6 @@ function Local({ modePath }: LocalProps) {
              .catch((err) => {
                 console.log(err.message);
              });
-
         await fetch(paramurl,{
               method:'GET',
               headers: {
@@ -148,7 +141,6 @@ function Local({ modePath }: LocalProps) {
   }
   displayDicom();
   //uploadData();
-
   const onDrop = async acceptedFiles => {
     // acceptedFiles.forEach(file => {
     //   const reader = new FileReader();

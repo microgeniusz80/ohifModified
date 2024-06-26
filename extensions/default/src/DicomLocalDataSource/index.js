@@ -1,6 +1,8 @@
 import { DicomMetadataStore, IWebApiDataSource, utils } from '@ohif/core';
 import OHIF from '@ohif/core';
 import dcmjs from 'dcmjs';
+import { useEffect } from 'react';
+import { ayam, kucing } from '../../../globaldata/globallydata';
 
 const metadataProvider = OHIF.classes.MetadataProvider;
 const { EVENTS } = DicomMetadataStore;
@@ -175,68 +177,19 @@ function createDicomLocalApi(dicomLocalConfig) {
     store: {
       dicom: naturalizedReport => {
         const reportBlob = dcmjs.data.datasetToBlob(naturalizedReport);
-        console.log('blob lalala')
+        const storageName = naturalizedReport['StudyID'];
+        const storageFileName = naturalizedReport['SeriesDescription'];
         console.log('solat', naturalizedReport['StudyID']);
+        console.log('full', naturalizedReport);
+
+        console.log('baca', ayam.split('/')[0]);
+        var tempatSimpan = ayam.split('/')[0];
+
 
         const reader = new FileReader();
 
-
         reader.onload = async function (event) {
           console.log('solat 3', reader.result);
-
-          var provenanceJson = //keeps provenance fhir resource format, so that we can modify its content, after user signed the canvas
-          {
-            "resourceType": "Provenance",
-            "target": [{
-                "reference": "",
-                "type":"" // put patient ID here to save his/her provenance information
-            },
-            {
-              "reference": "",
-              "type":"" // put patient ID here to save his/her provenance information
-            }],
-            "recorded": "",
-            "agent": [{
-                "role": [{
-                    "coding": [{
-                        "system": "http://terminology.hl7.org/CodeSystem/v3-RoleClass",
-                        "code": "PAT",
-                        "display": "Patient"
-                    }]
-                }],
-                "who": {
-                    "reference": ""
-                }
-            }],
-            "signature": [{
-                "type": [{
-                    "system": "urn:iso-astm:E1762-95:2013",
-                    "code": "1.2.840.10065.1.12.1.1",
-                    "display": "Author's Signature"
-                }],
-                "when": "",
-                "who": {
-                    "reference": ""
-                },
-                "data": ""
-            }]
-          };
-
-          provenanceJson.signature[0].data = reader.result;
-
-          console.log(JSON.stringify(provenanceJson))
-
-
-
-
-
-
-
-
-
-
-
-
 
           console.log('change back to blob')
 
@@ -247,39 +200,64 @@ function createDicomLocalApi(dicomLocalConfig) {
 
           console.log('sending now');
 
-          const MY_TOKEN = "sl.B31opC6w3I63ISOc-woSDXy5msX2gCtucS7TD7uzaTQrNuyRQtde_rVdV_DjEulbGHyETR6Pn6MubaEVJaF5mWSIVvWPmnO8EUx2eOAQsHFJpVfXfW89So_61etuIC9SEfhARAugkH6T6_IzCOSm8fQ"
+          const baseData = reader.result.split(',')[1];
+          console.log('baseData', baseData);
 
-          await fetch('https://content.dropboxapi.com/2/files/upload', {
-            method: 'post',
-            body: reportBlob, //Base64
-            headers: {'Authorization': 'Bearer '+MY_TOKEN,
-                      'Content-Type': 'application/octet-stream',
-                      'Accept': 'application/json',
-                'Dropbox-API-Arg': '{"path": "/dicom4/file002","mode": "add","autorename": false,"mute": false,"strict_conflict": false}'
-                                        }
-          }).then(function(response) {
-            console.log('berjaya')
-                console.log("berjaya", response.json());
-          });
+          try {
+            const foldername = tempatSimpan;
+            const filename = storageFileName;
+            const contentFile = reportBlob;
 
+            const theData = {
+              resource: [
+                  {
+                      "name": "ImagingResult/",
+                      "path": "ImagingResult/",
+                      "type": "folder",
+                  },
+                  {
+                      "size": 10596,
+                      "name": "ImagingResult/testfileb.txt",
+                      "path": "ImagingResult/testfileb.txt",
+                      "type": "file",
+                      "is_base64": true,
+                      "content_type": "application/txt",
+                      "content": "kucing henasem", }
+              ]
+            }
 
+            const dreamToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiMzRlMzRiYmEyNWE4MWRhZjU4N2IzNGNhZDFmMmE1NyIsImlzcyI6Imh0dHA6Ly9kcmVhbWZhY3Rvcnk1LmVjb3N5cy5taG4uYXNpYS9hcGkvdjIvdXNlci9zZXNzaW9uIiwiaWF0IjoxNzE5MzA2NzA3LCJleHAiOjE3MTkzOTMxMDcsIm5iZiI6MTcxOTMwNjcwNywianRpIjoiRm9DWk9QMUpzeWN1UkRxWCIsInVzZXJfaWQiOjIsImZvcmV2ZXIiOmZhbHNlfQ.FfJbCxSLm3kgP49WmYh5q6xzwPRJgcbOTNJIE3h3bYY'
+            const headersApi = {
+              'Authorization': 'Bearer '+dreamToken,
+              'Content-Type': 'application/json',
+              'X-DreamFactory-API-Key': '36fda24fe5588fa4285ac6c6c2fdfbdb6b6bc9834699774c9bf777f706d05a88',
+              'Accept': '*/*'
+            }
 
+            async function fetchData() {
 
-          //dream factory file upload here ****************************************************************************
+              await fetch('https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/'+ foldername +'/?check_exist=false', {
+                method: 'POST',
+                headers: headersApi,
+              }).then(function(response) {
+                console.log("dreamFolder", response.json());
+              });
 
-          await fetch('https://content.dropboxapi.com/2/files/upload', {
-            method: 'post',
-            body: reportBlob, //Base64
-            headers: {'Authorization': 'Bearer '+MY_TOKEN,
-                      'Content-Type': 'application/octet-stream',
-                      'Accept': 'application/json',
-                'Dropbox-API-Arg': '{"path": "/dicom4/file002","mode": "add","autorename": false,"mute": false,"strict_conflict": false}'
-                                        }
-          }).then(function(response) {
-            console.log('berjaya')
-                console.log("berjaya", response.json());
-          });
+              await fetch('https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/'+ foldername +'/'+ filename +'?check_exist=false', {
+                method: 'POST',
+                headers: headersApi,
+                body: contentFile,
+              }).then(function(response) {
+                console.log("dreamFile", response.json());
+              });
 
+            }
+
+            fetchData();
+
+          } catch (e) {
+            console.error(e);
+          }
 
 
           // const adata = reader.result

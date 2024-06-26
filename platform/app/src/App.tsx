@@ -5,6 +5,7 @@ import i18n from '@ohif/i18n';
 import { I18nextProvider } from 'react-i18next';
 import { BrowserRouter } from 'react-router-dom';
 import Compose from './routes/Mode/Compose';
+import { createContext, useContext } from 'react';
 import {
   ExtensionManager,
   CommandsManager,
@@ -30,6 +31,7 @@ import createRoutes from './routes';
 import appInit from './appInit.js';
 import OpenIdConnectRoutes from './utils/OpenIdConnectRoutes';
 
+
 let commandsManager: CommandsManager,
   extensionManager: ExtensionManager,
   servicesManager: AppTypes.ServicesManager,
@@ -38,6 +40,9 @@ let commandsManager: CommandsManager,
 
 function App({ config, defaultExtensions, defaultModes }) {
   const [init, setInit] = useState(null);
+
+
+  
   useEffect(() => {
     const run = async () => {
       appInit(config, defaultExtensions, defaultModes).then(setInit).catch(console.error);
@@ -133,10 +138,10 @@ function App({ config, defaultExtensions, defaultModes }) {
 
   return (
     <CombinedProviders>
-      <BrowserRouter basename={routerBasename}>
-        {authRoutes}
-        {appRoutes}
-      </BrowserRouter>
+        <BrowserRouter basename={routerBasename}>
+          {authRoutes}
+          {appRoutes}
+        </BrowserRouter>
     </CombinedProviders>
   );
 }
