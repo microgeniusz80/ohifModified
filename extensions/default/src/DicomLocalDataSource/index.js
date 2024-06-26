@@ -226,16 +226,31 @@ function createDicomLocalApi(dicomLocalConfig) {
               ]
             }
 
-            const dreamToken = 'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJiMzRlMzRiYmEyNWE4MWRhZjU4N2IzNGNhZDFmMmE1NyIsImlzcyI6Imh0dHA6Ly9kcmVhbWZhY3Rvcnk1LmVjb3N5cy5taG4uYXNpYS9hcGkvdjIvdXNlci9zZXNzaW9uIiwiaWF0IjoxNzE5NDAyMjY1LCJleHAiOjE3MTk0ODg2NjUsIm5iZiI6MTcxOTQwMjI2NSwianRpIjoicFY3dnQwTUxwVWlkRFhudCIsInVzZXJfaWQiOjIsImZvcmV2ZXIiOmZhbHNlfQ.2pQkU4_4tAcbznm7DDzRsC1RkNqNoxaNT7UDl0Gk3Ug'
-            const headersApi = {
-              'Authorization': 'Bearer '+dreamToken,
-              'Content-Type': 'application/json',
-              'X-DreamFactory-API-Key': '36fda24fe5588fa4285ac6c6c2fdfbdb6b6bc9834699774c9bf777f706d05a88',
-              'Accept': '*/*'
-            }
+
 
             async function fetchData() {
 
+              var dreamToken = ''
+
+
+
+              await fetch('https://provider.ecosys.mhn.asia/api/v1/factory/get-token')
+                .then((res) => res.json())
+                .then((data) => {
+                    dreamToken = data.token;
+                    console.log('the tokenin viewer: ',dreamToken);
+                })
+                .catch((err) => {
+                    console.log(err.message);
+                });
+
+                const headersApi = {
+                  'Authorization': 'Bearer '+dreamToken,
+                  'Content-Type': 'application/json',
+                  'X-DreamFactory-API-Key': '36fda24fe5588fa4285ac6c6c2fdfbdb6b6bc9834699774c9bf777f706d05a88',
+                  'Accept': '*/*'
+                }
+console.log('the dreamtoken penat', dreamToken)
               await fetch('https://dreamfactory5.ecosys.mhn.asia/api/v2/files/ImagingResult/'+ foldername +'/?check_exist=false', {
                 method: 'POST',
                 headers: headersApi,
